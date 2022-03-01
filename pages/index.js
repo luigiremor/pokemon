@@ -1,23 +1,64 @@
 import Head from 'next/head'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { responseSymbol } from 'next/dist/server/web/spec-compliant/fetch-event'
 
 export default function Home() {
-  const [pokemons, setPokemons] = useState({})
-
   useEffect(() => {
-    async function getPokemons() {
-      axios
-        .get('https://pokeapi.co/api/v2/pokemon?limit=100')
-        .then(response => setPokemons(response.data.results))
-        .catch(err => {
-          console.error('ops! ocorreu um erro' + err)
-        })
-    }
-
     getPokemons()
+    // getPokemon()
   }, [])
 
+  useEffect(() => {
+    getPokemon()
+  }, [])
+
+  const [pokemons, setPokemons] = useState({})
+  const [loading, setLoading] = useState(false)
+
+  const [pokemonChosen, setPokemonChosen] = useState(false)
+  const [pokemon, setPokemon] = useState({
+    name: '',
+    species: '',
+    img: '',
+    hp: '',
+    attack: '',
+    defense: '',
+    type: ''
+  })
+
+  const getPokemons = async () => {
+    try {
+      const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10')
+      setPokemons(res.data.results)
+      setLoading(true)
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  const getPokemon = async sel => {
+    try {
+      if (sel != undefined) {
+        const response = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${sel}`
+        )
+        setPokemon({
+          name: sel,
+          species: response.data.species.name,
+          img: response.data.sprites.front_default,
+          hp: response.data.stats[0].base_stat,
+          attack: response.data.stats[1].base_stat,
+          defense: response.data.stats[2].base_stat,
+          type: response.data.types[0].type.name
+        })
+        setPokemonChosen(true)
+      }
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+  console.log(pokemon)
   console.log(pokemons)
   return (
     <div>
@@ -30,15 +71,21 @@ export default function Home() {
       <main className="h-screen flex justify-center ">
         <div>
           <div className="text-3xl font-mono">
-            Which pokemon do you want to know?
+            Which pokemon do you want to know? 🔍
           </div>
           <div>
-            <select className="w-full bg-gray-400/50 rounded-md p-2">
-              {pokemons?.map(pokemon => {
-                return <option>{pokemon.name}</option>
-              })}
+            <select
+              className="w-full bg-gray-400/50 rounded-md p-2"
+              onChange={e => getPokemon(e.target.value)}
+            >
+              {loading &&
+                pokemons.map(pokemon => {
+                  return <option id={pokemon.name}>{pokemon.name}</option>
+                })}
             </select>
-            {/* {pokemons.id} */}
+          </div>
+          <div>
+            {!pokemonChosen ? <div>teste</div> : <div>{pokemon.name}</div>}
           </div>
         </div>
       </main>
