@@ -16,7 +16,6 @@ export default function Home() {
   const [pokemons, setPokemons] = useState({})
   const [loading, setLoading] = useState(false)
   const [pokemonChosen, setPokemonChosen] = useState(false)
-  // const [selectedPokemon, setSelectedPokemon] = useState('pikachu')
   const [pokemon, setPokemon] = useState({})
 
   const getPokemons = async () => {
@@ -53,18 +52,18 @@ export default function Home() {
         />
       </Head>
 
-      <main className="h-screen w-screen flex justify-center ">
+      <main className="h-screen w-screen flex justify-center my-10">
         <div>
-          <div className="text-3xl font-mono">
+          <div className="text-3xl font-mono mb-5">
             Which pokemon do you want to know?
           </div>
-          <div>
+          <div className="mb-5">
             <select
               className="w-full bg-gray-200/50 rounded-md p-2"
               onChange={e => getPokemon(e.target.value)}
             >
               <option disabled selected hidden>
-                Select your option
+                Select your pokemon
               </option>
               {loading &&
                 pokemons.map(pokemon => {
