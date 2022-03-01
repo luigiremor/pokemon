@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { responseSymbol } from 'next/dist/server/web/spec-compliant/fetch-event'
+import { stringify } from 'postcss'
 
 export default function Home() {
   useEffect(() => {
@@ -15,17 +15,9 @@ export default function Home() {
 
   const [pokemons, setPokemons] = useState({})
   const [loading, setLoading] = useState(false)
-
   const [pokemonChosen, setPokemonChosen] = useState(false)
-  const [pokemon, setPokemon] = useState({
-    name: '',
-    species: '',
-    img: '',
-    hp: '',
-    attack: '',
-    defense: '',
-    type: ''
-  })
+  // const [selectedPokemon, setSelectedPokemon] = useState('pikachu')
+  const [pokemon, setPokemon] = useState({})
 
   const getPokemons = async () => {
     try {
@@ -40,18 +32,8 @@ export default function Home() {
   const getPokemon = async sel => {
     try {
       if (sel != undefined) {
-        const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/${sel}`
-        )
-        setPokemon({
-          name: sel,
-          species: response.data.species.name,
-          img: response.data.sprites.front_default,
-          hp: response.data.stats[0].base_stat,
-          attack: response.data.stats[1].base_stat,
-          defense: response.data.stats[2].base_stat,
-          type: response.data.types[0].type.name
-        })
+        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${sel}`)
+        setPokemon(res.data)
         setPokemonChosen(true)
       }
     } catch (err) {
@@ -68,14 +50,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="h-screen flex justify-center ">
+      <main className="h-screen w-screen flex justify-center ">
         <div>
           <div className="text-3xl font-mono">
             Which pokemon do you want to know? 🔍
           </div>
           <div>
             <select
-              className="w-full bg-gray-400/50 rounded-md p-2"
+              className="w-full bg-gray-200/50 rounded-md p-2"
               onChange={e => getPokemon(e.target.value)}
             >
               {loading &&
@@ -84,8 +66,29 @@ export default function Home() {
                 })}
             </select>
           </div>
-          <div>
-            {!pokemonChosen ? <div>teste</div> : <div>{pokemon.name}</div>}
+          <div className="flex justify-center">
+            {!pokemonChosen ? (
+              <div className="flex h-full items-center justify-center text-2xl font-mono">
+                Select a pokemon!
+                <img
+                  className="h-16"
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/029b8bd9-cb5a-41e4-9c7e-ee516face9bb/dayo3ow-7ac86c31-8b2b-4810-89f2-e6134caf1f2d.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzAyOWI4YmQ5LWNiNWEtNDFlNC05YzdlLWVlNTE2ZmFjZTliYlwvZGF5bzNvdy03YWM4NmMzMS04YjJiLTQ4MTAtODlmMi1lNjEzNGNhZjFmMmQuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ooubhxjHp9PIMhVxvCFHziI6pxDAS8glXPWenUeomWs"
+                />
+              </div>
+            ) : (
+              <div className="flex-col justify-center w-1/2">
+                <img
+                  className="flex justify-center h-64 m-auto"
+                  src={pokemon.sprites.front_default}
+                />
+                <div className="flex-col self-center justify-center font-mono ">
+                  <div className="flex justify-center">{pokemon.name}</div>
+                  <div className="flex justify-center text-gray-500">
+                    #{`${pokemon.id}`.padStart(3, '0')}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>
