@@ -62,9 +62,7 @@ export default function Home() {
               className="w-full bg-gray-200/50 rounded-md p-2"
               onChange={e => getPokemon(e.target.value)}
             >
-              <option disabled selected hidden>
-                Select your pokemon
-              </option>
+              <option hidden>Select your pokemon</option>
               {loading &&
                 pokemons.map(pokemon => {
                   return (
@@ -87,7 +85,7 @@ export default function Home() {
             ) : (
               <div className="flex-col justify-center w-1/2">
                 <img
-                  className="flex justify-center h-64 m-auto"
+                  className="flex justify-center h-64 m-auto animate-[bounce_1s_ease-in-out_infinite]"
                   src={pokemon.sprites.front_default}
                 />
                 <div className="flex-col self-center justify-center font-mono ">
