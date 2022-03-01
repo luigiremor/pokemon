@@ -57,9 +57,9 @@ export default function Home() {
           <div className="text-3xl text-center font-mono mb-5">
             Which pokemon do you want to know?
           </div>
-          <div className="mb-5">
+          <div className="mb-5 mx-2">
             <select
-              className="w-full bg-gray-200/50 rounded-md p-2 mx-2"
+              className="w-full bg-gray-200/50 rounded-md p-2 "
               onChange={e => getPokemon(e.target.value)}
             >
               <option hidden>Select your pokemon</option>
