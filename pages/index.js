@@ -100,8 +100,8 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="absolute bottom-0 mb-5 self-center font-mono w-full">
-        <div className="flex select-none justify-center ">
+      <footer className="flex-col justify-center w-full absolute bottom-0 mb-5 self-center font-mono">
+        <div className="select-none justify-center text-center">
           Did you like?
           <span className="ml-1 select-none font-bold">
             Feel free to leave me feedbacks
